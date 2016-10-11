@@ -1,6 +1,6 @@
 module Main where
 
-import App.Types (AppEffects)
+import App.Effects (AppEffects)
 import App.Routes (match)
 import App.Layout (Action(PageView), State, view, update)
 import Control.Bind ((=<<))
