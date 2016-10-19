@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'monoidregular';
+    src: url('../lib/font/monoid-regular/monoid-regular-webfont.woff2') format('woff2'),
+         url('../lib/font/monoid-regular/monoid-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+.reveal {
+  background: #000;
+  background-color: #000;
+}
+.reveal > .backgrounds {
+  opacity: .3
+}
+
+.reveal blockquote {
+  font-size: 1.3em !important;
+}
+
+.reveal blockquote p {
+  padding: 25px;
+}
+
+.reveal cite {
+  font-size: .8em !important;
+  font-style: italic !important;
+}
+
+.reveal pre {
+  box-shadow: none;
+  margin: 0 auto;
+}
+
+.reveal pre code {
+  font-family: monoidregular;
+  padding: 10px;
+  border-radius: 3px;
+  padding: -10px 15px;
+  line-height: 1.75;
+}
