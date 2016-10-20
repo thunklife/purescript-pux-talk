@@ -25,7 +25,6 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<div class="slides">
         <section data-background="images/doubletree-1.jpg">
 					<h1>PureScript & Pux</h1>
 					<p>
@@ -47,9 +46,9 @@
 					</h2>
 					<aside class="notes">
 						<p>
-							PureScript is a typed, pure, functional programming language.
-							It's inspired by Haskell, so if you're familiar with Haskell, or
-							Elm it will look familiar.
+							PureScript is a typed, pure, functional programming language that
+							compiles to JavaScript. It's inspired by Haskell, so if you're
+							familiar with Haskell, or Elm it will look familiar.
 						</p>
 					</aside>
 				</section>
@@ -79,9 +78,9 @@
 					</p>
 					<aside class="notes">
 						<p>
-							Pure functions map inputs to outputs and no matter how many
-							times you call a function with the same input you'll get the same
-							output.
+							All functions in PureScript are pure, which means they just map
+							inputs to outputs and no matter how many times you call a function
+							with the same input you'll get the same output.
 						</p>
 						<p>
 							Pure functions are referentially transparent, which means you can
@@ -90,8 +89,8 @@
 						</p>
 						<p>
 							Pure functions can't have side effects. No logging to the console,
-							no HTTP requests, and no DOM. These functions are not referentially
-							transparent.
+							no Date/Time, no HTTP requests, and no DOM. These functions are
+							not referentially transparent.
 						</p>
 					</aside>
 				</section>
@@ -182,6 +181,10 @@ arrayMap = map
 							are separated by "->" and the last item in the type is the return type.
 						</p>
 						<p>
+							And this is how you call a function: the name of the function
+							followed by the arguments, separated by spaces.
+						</p>
+						<p>
 							Functions can also be polymorphic. The type of "arrayMap" says it takes
 							a function from some type "a" to some type "b" and a list of "a's",
 							and it will return a list of "b's". "a" and "b" are type variables.
@@ -191,7 +194,7 @@ arrayMap = map
 					</aside>
 				</section>
 				<section data-background="images/wedding.jpg">
-					<h2>Algebraic Data Types</h2>
+					<h2>Data Types</h2>
 					<pre class="fragment">
 						<code class="haskell">
 data RGB = Red | Green | Blue
@@ -209,29 +212,26 @@ data User = User String Number
 					</pre>
 					<aside class="notes">
 						<p>
-							Algebraic Data Types is the name given to a set containing two
-							kinds of data types: Sum Types and Product Types. In each instance
-							there is an "algebra" for figuring out the number of possible
-							values a type can hold. For Sum types we can calculate it using
-							addition, and from Product types we use multiplication.
+							There are a couple of different ways to define data types in
+							PureScript.
 						</p>
 						<p>
-							First we'll take a look at sum types, also called union types, if
-							you're familiar with enums in other languages this should look
-							pretty familiar. We've got a type "RGB" and there are three possible
-							values from that type: "Red", "Green" and "Blue".
+							Here we defined a type called RGB, with three possible values:
+							"Red", "Green", or "Blue". The | in between each value means "or".
+							This is called a sum, or union type. It's similar to an enum, but
+							more powerful.
 						</p>
 						<p>
-							This next example shows creates and "Action" type, with two possible
-							values: "AddUser" or "UpdateName", but each of these comes with some
-							extra information. "AddUser" comes with a "User" and "UpdateName"
-							inlcudes a "Name".
+							This next example creates an "Action" type, with two possible
+							values: "AddUser" or "UpdateName". This is another example of a
+							sum type, but each of these comes with some extra information.
+							"AddUser" comes with a "User" and "UpdateName" inlcudes a "String".
 						</p>
 						<p>
 							In this final example, we have a data type for a "User" and in order
-							to have a "User" it must have a "String" and a "Number". What those
-							types correspond to we don't know. Could be the name and age, could
-							be nonsense.
+							to have a "User" it must have a "String" and a "Number". Unfortunately,
+							we have no keys, so it's not clear what the String & Number are
+							used for.
 						</p>
 					</aside>
 				</section>
@@ -247,20 +247,23 @@ type User =
 					</pre>
 					<aside class="notes">
 						<p>
-							Records are like object literals in JavaScript; just simple
-							key/value pairs.
+							Which brings us to records, which are like object literals
+							in JavaScript; just simple key/value pairs. This version of User
+							is essentially the same as the previous one, except we now have
+							some context for those values.
 						</p>
 						<p>
-							Here we are using a type alias to define a record type. We're not
-							introducing a new data type, we're just saying, "We're going to call
-							a record that has a 'name' that is a String and an age that is a
-							Number, a User".
+							Here we are creating a type alias for a record. We're not
+							introducing a new data type, instead what this says is, "We're
+							going to call records that have a 'name' that is a String and an
+							'age' that is a Number, a User".
 						</p>
 						<p>
 							An important note with aliases is that they only provide a new way
-							to talk about existing types. If I create an alias for String and
-							call it Name, it's still just a string. Functions that take a Name
-							as an argument can still be called with any String.
+							to talk about existing types, but no additional compile time
+							benefits. If I create an alias for String and call it Name, it's
+							still just a string. Functions that take a Name as an argument can
+							still be called with any String.
 						</p>
 					</aside>
 				</section>
@@ -279,35 +282,35 @@ newtype User = User { name :: Name
 					</pre>
 					<aside class="notes">
 						<p>
-							A newtype is a way to wrap up an existing type. The type "Name String"
-							is not a string; unlike aliases which only give us a new way to
-							talk about existing types, newtypes give us compile time benefits.
+							A newtype is a way to wrap up an existing type. Like aliases, they
+							give us a different way to talk about existing types, newtypes give
+							us compile time benefits that aliases don't.
 						</p>
 						<p>
-							The nice thing about newtypes is that there is no overhead for
-							declaring one; the runtime representation is exactly the same as the
-							underlying type.
+							One benefit of newtypes is that they come with no overheard. What
+							that means is that the runtime representation is exactly the same
+							as the existing type.
 						</p>
 						<p>
-							One of the huge benefits of newtypes is they allow us to write new
-							typeclass instances for existing types. We'll touch on typeclasses
-							in a moment, but what this means is that the type "Name String",
-							while ultimately still a string can have different behavior than
-							a normal string; for example, in how we compare for equality.
+							newtypes allow us to write new typeclass instances for existing
+							types. We'll touch on typeclasses in a moment, but this means that
+							the newtype "Name" will be a string at runtime, but can have
+							different behavior than a normal string; for example,
+							in how we compare for equality.
 						</p>
 					</aside>
 				</section>
 				<section data-background="images/wedding.jpg">
 					<h2>Pattern Matching</h2>
-					<pre class="fragment">
-						<code class="haskell">
-royGeeBiv :: RGB -> String
-royGeeBiv R = "Roy"
-royGeeBiv G = "Gee"
-royGeeBiv B = "Biv"
-						</code>
-					</pre>
-					<pre class="fragment">
+					<aside class="notes">
+						<p>
+							Pattern matching allows us to write function definitions based
+							on the value of the input. It's very similar to a "switch" block.
+						</p>
+					</aside>
+				</section>
+				<section data-background="images/wedding.jpg">
+					<pre>
 						<code class="haskell">
 data UserAccount =
     Guest
@@ -320,30 +323,34 @@ greetUser (Authenticated { name }) = "Welcome back " <> name
 					</pre>
 					<aside class="notes">
 						<p>
-							Pattern matching allows us to write function definitions based
-							on the value of the input. It's very similar to a "switch" block.
-						</p>
-						<p>
-							In this first example we match on the literal value "1" and return
-							true. For all other numbers, the underscore there is a catchall,
-							we return false.
-						</p>
-						<p>
-							In the next example, we provide a definition for every possible
-							value of our "RGB" type and return a string represention
-						</p>
-						<p>
 							Finally, we create a UserAccount type that is either a Guest,
 							which has no additional data, or an Autheticated user with a name.
 							We provide a definition for each and in the the Authenticated
 							case we pull the name out and append it to the "Welcome back "
 							message.
 						</p>
+					</aside>
+				</section>
+				<section data-background="images/wedding.jpg">
+					<pre>
+						<code class="haskell">
+isItOne :: Int -> Boolean
+isItOne 1 = true
+isItOne _ = false
+						</code>
+					</pre>
+					<aside class="notes">
 						<p>
 							Pattern matches must be exhaustive, or your function must be
 							explicitly marked as Partial, meaning it doesn't handle all inputs.
 							You can exhaust all patterns either by handling each possible
 							input or by using a catchall.
+						</p>
+						<p>
+							In this example, we match the literal value 1, but it wouldn't be
+							possible to match every possible Int value. Instead we use an
+							underscore which matches any value. Patterns are checked
+							in order, so they should be defined from most specific to least.
 						</p>
 					</aside>
 				</section>
@@ -366,11 +373,11 @@ eq :: a -> a -> Boolean
 					</pre>
 					<aside class="notes">
 						<p>
-							If you're familiar with Elm, you might have heard the term
-							'fancy types' used to describe some of the types in languages like
-							Haskell or PureScript. Things like Monoid, Functor and Monad. Most
-							of the time what people are talking about are typeclasses; which
-							Elm doesn't have.
+							Fancy types. If you're familiar with Elm, you might have heard this
+							term used to describe some of the types in languages like Haskell
+							or PureScript. Things like Monoid, Functor and Monad. Most of the
+							time what people are talking about are typeclasses; which Elm
+							doesn't have. Monoid, Functor & Monad are all typeclasses.
 						</p>
 						<p>
 							A typeclass is just a way to abstract out common functionality. If
@@ -384,7 +391,10 @@ eq :: a -> a -> Boolean
 						</p>
 						<p>
 							The "Eq" typeclass, for example, is much more concrete. It lets us
-							define how equality works for our types.
+							define how equality works for our types. To make a data type an instance
+							of this type class, or in C#/Java, to implement this interface, we
+							need to write an eq function that can look at two values of our type
+							and check for equality.
 						</p>
 					</aside>
 				</section>
@@ -397,30 +407,33 @@ eq :: a -> a -> Boolean
 					</blockquote>
 					<aside class="notes">
 						<p>
+							Alright. On to Pux.
+						</p>
+						<p>
 							Pux is a PureScript interface to React, similar to the Elm app
 							architecture. It is a simple pattern for modular, nested components
 							that are easy to test, refactor, and debug - making it simple and
 							straightforward to build complex web applications.
 						</p>
 						<p>
-							So what is the Elm doubletree-2itecture?
+							So what is the Elm Architecture?
 						</p>
 					</aside>
 				</section>
 				<section data-background="images/doubletree-2.jpg">
-					<h2>The Elm architecture?</h2>
+					<h2>The Elm Architecture?</h2>
 					<blockquote>
-						The Elm architecture is a simple pattern for architecting webapps.
+						The Elm Architecture is a simple pattern for architecting webapps.
 						It is great for modularity, code reuse, and testing.
 					</blockquote>
 					<aside class="notes">
 						<p>
-							The Elm architecture is a simple pattern for architecting webapps.
+							The Elm Architecture is a simple pattern for architecting webapps.
 							It is great for modularity, code reuse, and testing.
 						</p>
 						<p>
 							The pattern breaks modules into three pieces. The "State", which
-							represents the state of your application or component*. An "Update"
+							represents the state of your application or component. An "Update"
 							function which transforms your state based on "Action"s. And a "View"
 							function that renders the "State".
 						</p>
@@ -432,6 +445,13 @@ eq :: a -> a -> Boolean
 				</section>
 				<section data-background="images/doubletree-2.jpg">
 					<h2>An Example</h2>
+					<aside class="notes">
+						<p>
+							We're going to take a look at a counter app. Press a
+							plus button and the count goes up. Press and minus button and it
+							goes down.
+						</p>
+					</aside>
 				</section>
 				<section data-background="images/doubletree-2.jpg">
 					<pre>
@@ -439,6 +459,13 @@ eq :: a -> a -> Boolean
 data Action = Increment | Decrement
 						</code>
 					</pre>
+					<aside class="notes">
+						<p>
+							We start by defining the actions a user can take; Increment or Decrement.
+						</p>
+					</aside>
+				</section>
+				<section data-background="images/doubletree-2.jpg">
 					<pre>
 						<code class="haskell">
 type State = Int
@@ -449,12 +476,9 @@ init = 0
 					</pre>
 					<aside class="notes">
 						<p>
-							We're going to take a look at a basic counter app. You press a
-							plus button and the count goes up. Press and minus button and it
-							goes down.
-						</p>
-						<p>
-							We start by defining the actions a user can take; Increment or Decrement.
+							Next comes our State, and in this case we just going to use an Int,
+							but we've given it an alias to make things easier to follow. We also
+							give an initial state for our counter.
 						</p>
 					</aside>
 				</section>
@@ -468,30 +492,9 @@ update Decrement state = state - 1
 					</pre>
 					<aside class="notes">
 						<p>
-							Next comes our State, and in this case we just going to use an Int,
-							but we've given it an alias to make things easier to follow. We also
-							give an initial state for our counter.
-						</p>
-						<p>
-							Next is the Update function which takes an Action, the current,
+							Next is the Update function which takes an Action, the current state,
 							and returns the new state. We pattern match on each type of Action
 							and either increment or decrement the counter.
-						</p>
-						<p>
-							Finally we have the View function which takes the current State
-							and returns some Html that can perform the types of Actions we
-							described above.
-						</p>
-						<p>
-							Pux provides a DSL for constructing HTML. Each element type has a
-							a corresponding function. Each element function takes two arguments,
-							a list of attributes, and a list of children.
-						</p>
-						<p>
-							So we have an H1, an increment button, a span that shows the count,
-							and a decrement button. When the user clicks a button our Update
-							function is called with the correct action, and state. Then the View
-							function is called to render the new state.
 						</p>
 					</aside>
 				</section>
@@ -539,7 +542,7 @@ view state =
 							So why would you want to program like this? Programming with pure
 							functions, immutable data, and types puts a lot of restriction on
 							the developer, what's the benefit? For me the benefit is in
-							reliability, reasoning, and testing.
+							testing, reliability, and reasoning.
 						</p>
 					</aside>
 				</section>
@@ -550,8 +553,10 @@ view state =
 					<aside class="notes">
 						<p>
 							When a function just maps inputs to outputs and can have no side
-							effects, the testing is far simpler. Additionally, adding types
-							can completely eliminate entire classes of test.
+							effects, the testing is far simpler. There is no orchestration,
+							mocking, etc. Adding types can completely eliminate entire
+							classes of test.There's no need to test what some function, that
+							is supposed to accept number, does when you give it a string.
 						</p>
 					</aside>
 				</section>
@@ -581,6 +586,9 @@ update :: Action -> State -> State
 					</pre>
 					<aside class="notes">
 						<p>
+							The case of reasoning is best described with an example.
+						</p>
+						<p>
 							What can you tell me about what this function does? It could do a
 							lot things really. We don't really know what it does, but we
 							absolutely know what it doesn't do: It doesn't use anything other
@@ -589,21 +597,48 @@ update :: Action -> State -> State
 						</p>
 						<p>
 							But types can tell us a fair bit about what a function actually
-							does. That has to do with parametricity & Free Thereoms, but those
-							topics are beyond the scope of this talk.
+							does. The types we use in our function can so limit what a function
+							is allowed to do with it's arguments, that we can, in some cases
+							be left with only one possible implementation. How that is possible
+							is beyond the scope of this talk, unfortunately.
 						</p>
 						<p>
-							We know these things because our functions are pure and side-effects
-							are encoded in types. Without these constraints, we lose the ability
-							to reason about our programs in this way.
+							By contraining ourselves to pure functions, static types, with
+							effects built into the type system, we are able to understand much
+							more about our code. Without them, we're left with names, and sifting
+							through numerous lines of source code.
 						</p>
 					</aside>
 				</section>
+        <section data-background="images/cortez.jpg">
+					<h2>Resources</h2>
+					<p>
+						<a href="https://www.youtube.com/watch?v=AE4ToMtTmz4">
+							PureScript & Pux: A Safer Way To React
+						</a>
+					</p>
+					<p>
+						<a href="http://www.purescript.org/">PureScript website</a>
+					</p>
+					<p>
+						<a href="https://leanpub.com/purescript">PureScript By Example</a>
+					</p>
+					<p>
+						<a href="http://www.alexmingoia.com/purescript-pux/">Pux Gitbook</a>
+					</p>
+					<p>
+						<a href="http://haskellbook.com/">Haskell Book</a>
+					</p>
+					<p>
+						<a href="http://degoes.net/articles/insufficiently-polymorphic">Descriptive Variable Names: A Code Smell</a>
+					</p>
+					<aside class="notes">
+					</aside>
+        </section>
         <section data-background="images/doubletree-1.jpg">
 					<h1>Thanks.</h1>
-					<small>@thunk_life</small>
+					<small><a href="https://twitter.com/thunk_life">@thunk_life</a></small>
         </section>
-			</div>
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
