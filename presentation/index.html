@@ -289,7 +289,8 @@ newtype User = User { name :: Name
 						<p>
 							One benefit of newtypes is that they come with no overheard. What
 							that means is that the runtime representation is exactly the same
-							as the existing type.
+							as the existing type, but they are distinct from the point of view
+							of the type system.
 						</p>
 						<p>
 							newtypes allow us to write new typeclass instances for existing
@@ -312,6 +313,22 @@ newtype User = User { name :: Name
 				<section data-background="images/wedding.jpg">
 					<pre>
 						<code class="haskell">
+royGeeBiv :: RGB -> String
+royGeeBiv R = "Roy"
+royGeeBiv G = "Gee"
+royGeeBiv B = "Biv"
+						</code>
+					</pre>
+					<aside class="notes">
+						<p>
+							In this example, we provide a definition for each value of the "RGB"
+							data type we defined earlier, and return a string.
+						</p>
+					</aside>
+				</section>
+				<section data-background="images/wedding.jpg">
+					<pre>
+						<code class="haskell">
 data UserAccount =
     Guest
   | Authenticated { name :: String }
@@ -323,7 +340,7 @@ greetUser (Authenticated { name }) = "Welcome back " <> name
 					</pre>
 					<aside class="notes">
 						<p>
-							Finally, we create a UserAccount type that is either a Guest,
+							Here we create a UserAccount type that is either a Guest,
 							which has no additional data, or an Autheticated user with a name.
 							We provide a definition for each and in the the Authenticated
 							case we pull the name out and append it to the "Welcome back "
@@ -347,7 +364,7 @@ isItOne _ = false
 							input or by using a catchall.
 						</p>
 						<p>
-							In this example, we match the literal value 1, but it wouldn't be
+							Here we match the literal value 1, but it wouldn't be
 							possible to match every possible Int value. Instead we use an
 							underscore which matches any value. Patterns are checked
 							in order, so they should be defined from most specific to least.
@@ -405,6 +422,9 @@ eq :: a -> a -> Boolean
 						It is a simple pattern for modular, nested components
 						that are easy to test, refactor, and debug...
 					</blockquote>
+					<cite>
+						http://www.alexmingoia.com/purescript-pux/
+					</cite>
 					<aside class="notes">
 						<p>
 							Alright. On to Pux.
@@ -426,6 +446,9 @@ eq :: a -> a -> Boolean
 						The Elm Architecture is a simple pattern for architecting webapps.
 						It is great for modularity, code reuse, and testing.
 					</blockquote>
+					<cite>
+						https://guide.elm-lang.org/architecture/
+					</cite>
 					<aside class="notes">
 						<p>
 							The Elm Architecture is a simple pattern for architecting webapps.
