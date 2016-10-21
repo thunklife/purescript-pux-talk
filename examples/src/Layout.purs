@@ -8,7 +8,7 @@ import App.Routes (Route(Home, Counter, Github, Game))
 import Control.Monad.Eff.Random (RANDOM)
 import DOM (DOM)
 import Network.HTTP.Affjax (AJAX)
-import Prelude (($), (#), map)
+import Prelude (($), (#), (<$>))
 import Pux (mapEffects, mapState, noEffects, EffModel)
 import Pux.Html (Html, div)
 import Pux.Html.Attributes (className)
@@ -49,8 +49,8 @@ view state =
   div
     [ className "container" ]
     [ case state.route of
-        Home -> Home.view
-        Counter -> map ChildCounter $ Counter.view state.count
-        Github -> map ChildGithub $ GH.view state.github
-        Game -> map ChildGame $ RPS.view state.game
+        Home    -> Home.view
+        Game    -> ChildGame <$> RPS.view state.game
+        Github  -> ChildGithub <$> GH.view state.github
+        Counter -> ChildCounter <$> Counter.view state.count
     ]
